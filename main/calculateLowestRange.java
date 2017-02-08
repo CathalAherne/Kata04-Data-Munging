@@ -2,23 +2,18 @@ import java.io.*;
 
 /**
  * Created by Cathal on 22/01/2017.
- *
- * Relevant column Nums: Weather: {6,8,12,14}
- *                       Table: {43,45,50,52}
  */
 public class calculateLowestRange {
 
     private File dataFile;
     private FileReader fr;
     private BufferedReader br;
-    private int[] relevantColumnNumbers;
     private int dataIdColumnStartIndex;
 
-    public calculateLowestRange(String fileName,int[] relevantColumnNumbers) throws FileNotFoundException{
+    public calculateLowestRange(String fileName) throws FileNotFoundException{
         dataFile = new File(fileName);
         fr = new FileReader(dataFile);
         br = new BufferedReader(fr);
-        this.relevantColumnNumbers = relevantColumnNumbers;
     }
 
     public String getLowestRange()throws IOException {
@@ -27,11 +22,18 @@ public class calculateLowestRange {
         String dataID = "";
         int range = 0;
         String header = br.readLine();
+        //Relevant column indexes of each file
+        int[] relevantColumnNumbersWeatherData = {6, 8, 12, 14};
+        int[] relevantColumnNumbersFootballData = {43,45,50,52};
+        int[] relevantColumnNumbers;
         //Get dataIdColumn starting position depending on file
-        if(header.charAt(2) == 'D'){
+        if(header.charAt(2) == 'D') {
             this.dataIdColumnStartIndex = 2;
-        }else{
+            relevantColumnNumbers = relevantColumnNumbersWeatherData;
+        }
+        else{
             this.dataIdColumnStartIndex = 7;
+            relevantColumnNumbers = relevantColumnNumbersFootballData;
         }
         //While not end of file
         while ((line = br.readLine()) != null) {
@@ -53,8 +55,7 @@ public class calculateLowestRange {
         return dataID;
     }
     public static void main(String[] args) throws IOException{
-        int[] columnsWithRanges = {6,8,12,14};
-        calculateLowestRange run = new calculateLowestRange("weather.dat",columnsWithRanges);
+        calculateLowestRange run = new calculateLowestRange("football.dat");
         System.out.println(run.getLowestRange());
     }
 }
